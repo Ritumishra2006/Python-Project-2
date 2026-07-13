@@ -1,60 +1,52 @@
+# Train-Test Split for Early Disease Risk Prediction
+
 import pandas as pd
-
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-df = pd.read_csv("encoded_lifestyle_dataset.csv")
+# Load the dataset
+df = pd.read_csv("early_disease_risk_lifestyle_dataset.csv")
+
+# Display first 5 rows
+print("First 5 Rows:")
+print(df.head())
+
+# Display dataset shape
+print("\nDataset Shape:", df.shape)
+
+# Display column names
+print("\nColumns:")
+print(df.columns.tolist())
+
+# Features (Independent Variables)
+X = df.drop("Risk_Level", axis=1)
+
 # Target Variable
 y = df["Risk_Level"]
 
-# Features
-X = df.drop("Risk_Level", axis=1)
+# Convert Categorical Columns to Numeric
+X = pd.get_dummies(X, drop_first=True)
 
+# Train-Test Split
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
     test_size=0.20,
-    random_state=42
+    random_state=42,
+    stratify=y
 )
 
-print("Training Data:", X_train.shape)
-print("Testing Data :", X_test.shape)
+# Display Results
+print("\nTraining Feature Shape :", X_train.shape)
+print("Testing Feature Shape  :", X_test.shape)
 
-#Create the Random Forest Model
-rf_model = RandomForestClassifier(
-    n_estimators=100,
-    random_state=42
-)
+print("\nTraining Label Shape :", y_train.shape)
+print("Testing Label Shape  :", y_test.shape)
 
-#Train the Model
-rf_model.fit(X_train, y_train)
+print("\nTraining Samples :", len(X_train))
+print("Testing Samples  :", len(X_test))
 
-print("Model trained successfully!")
+print("\nTraining Class Distribution:")
+print(y_train.value_counts())
 
-#Make Predictions
-y_pred = rf_model.predict(X_test)
-
-#Calculate Accuracy
-accuracy = accuracy_score(y_test, y_pred)
-
-print("Accuracy:", round(accuracy * 100, 2), "%")
-
-#Classification Report
-print("\nClassification Report:\n")
-
-print(classification_report(y_test, y_pred))
-
-#Confusion Matrix
-print("Confusion Matrix:\n")
-
-print(confusion_matrix(y_test, y_pred))
-
-#Save the Trained Model (Optional)
-import joblib
-
-joblib.dump(rf_model, "random_forest_model.pkl")
-
-print("Model saved as random_forest_model.pkl")
-git 
-
+print("\nTesting Class Distribution:")
+print(y_test.value_counts())

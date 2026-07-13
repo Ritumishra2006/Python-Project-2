@@ -11,7 +11,7 @@ print(df.head())
 print("\nLast 5 Rows:")
 print(df.tail())
 
-# 3. Shape of the dataset
+# 3. Shape of te dataset
 print("\nDataset Shape:")
 print(df.shape)
 
